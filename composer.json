@@ -1,0 +1,34 @@
+{
+  "name": "ytake/hhhal",
+  "description": "for HATEOAS REST web services",
+  "keywords": [
+    "hypermedia",
+    "rest",
+    "serialize"
+  ],
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Yuuki Takezawa",
+      "email": "yuuki.takezawa@comnect.jp.net"
+    }
+  ],
+  "require": {
+    "hhvm": ">=3.24",
+    "hhvm/hhvm-autoload": "^1.5"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^5.7",
+    "91carriage/phpunit-hhi": "^5.7",
+    "facebook/fbexpect": "^0.4.0",
+    "hhvm/hhast": "^0.6.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "Ytake\\HHhal\\": "src/"
+    }
+  },
+  "autoload-dev": {
+  },
+  "minimum-stability": "stable"
+}
