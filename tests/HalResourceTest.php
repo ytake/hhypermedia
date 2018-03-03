@@ -1,18 +1,39 @@
-<?hh // strict
+<?hh //strict
 
+use Ytake\HHhal\{
+  HalResource,
+  Link,
+  LinkResource
+};
 use PHPUnit\Framework\TestCase;
-use Ytake\HHhal\Link;
-use Ytake\HHhal\HalResource;
 
-final class HalResourceTest extends TestCase {
+class HalResourceTest extends TestCase {
 
-  public function testShouldBeHalResource(): void {
-    $hal = new HalResource("/testing");
-    $hal->withLink(new Link(
-      ImmVector{ "tests" },
-      "/root"
-    ));
+  public function testShouldBeHalResourceObject(): void {
+    $link = new Link(
+      'self',
+      new ImmVector([new LinkResource('/tests')]),
+    );
+    $resource = new HalResource(new Map([
+      'id' => 123456789
+    ]));
+    $resource->withLink($link);
+    $ar = $resource->getLinks()->toArray();
+    $this->assertArrayHasKey('self', $ar);
+    $this->assertSame('self', $ar['self']->getRel());
+  }
+
+  public function testShouldBeReturnEmbedded(): void {
+    $link = new Link(
+      'self',
+      new ImmVector([new LinkResource('/tests')]),
+    );
+    $resource = new HalResource(new Map([
+      'id' => 123456789
+    ]));
+    $resource->withLink($link);
+    $hal = new HalResource();
+    $hal->withEmbedded('tests', $resource);
     $this->assertInstanceOf(HalResource::class, $hal);
   }
 }
-

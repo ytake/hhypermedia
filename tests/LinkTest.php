@@ -1,17 +1,16 @@
 <?hh // strict
 
+use Ytake\HHhal\{Link, LinkResource};
 use PHPUnit\Framework\TestCase;
-use Ytake\HHhal\Link;
 
-final class LinkTest extends TestCase {
+class LinkTest extends TestCase {
 
-  public function testShouldBeLink(): void {
+  public function testShouldBeLinkObjects(): void {
     $link = new Link(
-      ImmVector{ "self" },
-      "/root"
+      'self',
+      new ImmVector([new LinkResource('/tests')]),
     );
     $this->assertInstanceOf(Link::class, $link);
-    $this->assertSame([], $link->getAttributes()->toArray());
-    $this->assertSame(["self"], $link->getRels()->toArray());
+    $this->assertSame($link->getRel(), 'self');
   }
 }

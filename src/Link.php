@@ -3,27 +3,17 @@
 namespace Ytake\HHhal;
 
 class Link {
-  
+
   public function __construct(
-    protected ImmVector<string> $rels,
-    protected string $href,
-    protected ImmMap<string, mixed> $immAttributes = ImmMap{},
-    protected bool $templated = false
+    protected string $rel,
+    protected ImmVector<LinkResource> $link
   ) {}
-  
-  public function getRels(): ImmVector<string> {
-    return $this->rels;
+
+  public function getRel(): string {
+    return $this->rel;
   }
 
-  public function getHref(): string {
-    return $this->href;
-  }
-
-  public function getAttributes(): ImmMap<string, mixed> {
-    return $this->immAttributes;   
-  }
-
-  public function isTemplated(): bool {
-    return $this->templated;
+  public function getResource(): ImmVector<LinkResource> {
+    return $this->link;
   }
 }
