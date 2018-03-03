@@ -28,6 +28,26 @@ $hal->withEmbedded('tests', $resource);
 new Serializer(new JsonSerializer(), $hal);
 ```
 
+### Serialize
+Supported Json
+
+```json
+{
+  "_embedded":{
+    "tests":[
+      {
+        "id":123456789,
+        "_links":{
+          "self":{
+            "href":"\/tests"
+          }
+        }
+      }
+    ]
+  }
+}
+```
+
 ## Testing
 
 ```bash
