@@ -3,15 +3,19 @@
 namespace Ytake\HHhal;
 
 type LinkAttributes = shape(
-  ?'templated' => bool,
   ?'type' => string,
+  ?'deprecation' => string,
+  ?'name' => string,
+  ?'profile' => string,
+  ?'title' => string,
+  ?'hreflang' => string
 );
 
 class LinkResource {
 
   public function __construct(
     protected string $href,
-    protected ImmMap<string, mixed> $immAttributes = ImmMap{},
+    protected LinkAttributes $attributes = shape(),
     protected bool $templated = false
   ) {}
 
@@ -19,8 +23,8 @@ class LinkResource {
     return $this->href;
   }
 
-  public function getAttributes(): ImmMap<string, mixed> {
-    return $this->immAttributes;
+  public function getAttributes(): LinkAttributes {
+    return $this->attributes;
   }
 
   public function isTemplated(): bool {

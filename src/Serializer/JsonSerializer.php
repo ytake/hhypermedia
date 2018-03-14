@@ -7,10 +7,6 @@ use Ytake\HHhal\HalResource;
 
 class JsonSerializer implements ResourceSerializable {
 
-  protected array<string, array<mixed, mixed>> $embedded = [];
-
-  protected array<mixed, mixed> $resource = [];
-
   protected function serialize(
     HalResource $resource,
     array<mixed, mixed> $embedded = []
@@ -21,25 +17,24 @@ class JsonSerializer implements ResourceSerializable {
       foreach($resource->getLinks() as $l => $r) {
         foreach($r->getResource() as $lr) {
           $links[$l] = [
-            'href' => $lr->getHref(),
+            Property::HREF => $lr->getHref(),
           ];
-          $links[$l] = array_merge($links[$l], $lr->getAttributes()->toArray());
+          $links[$l] = array_merge($links[$l], $lr->getAttributes());
           if ($lr->isTemplated()) {
-            $links[$l]['templated'] = true;
+            $links[$l][Property::TEMPLATED] = true;
           }
         }
       }
     }
     $embedded = array_merge($embedded, $resource->getResource()->toArray());
     if (count($links)) {
-      $embedded['_links'] = $links;
+      $embedded[Property::LINKS] = $links;
     }
     if ($resource->getEmbedded()->count()) {
       foreach($resource->getEmbedded() as $k => $row) {
         if($row->count()) {
-          $next[$k] = $this->resource;
           foreach($row as $vec) {
-            $embedded['_embedded'][$k][] = $this->serialize($vec, $next[$k]);
+            $embedded[Property::EMBEDDED][$k][] = $this->serialize($vec);
           }
         }
       }
@@ -47,7 +42,11 @@ class JsonSerializer implements ResourceSerializable {
     return $embedded;
   }
 
-  public function render(HalResource $resource, array<mixed, mixed> $embedded = []): array<mixed, mixed> {
-    return $this->serialize($resource, $embedded);
+  public function toArray(HalResource $resource): array<mixed, mixed> {
+    return $this->serialize($resource);
+  }
+
+  public function render(array<mixed, mixed> $resources = []): string {
+    return json_encode($resources);
   }
 }
