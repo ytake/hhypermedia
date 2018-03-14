@@ -12,11 +12,11 @@ class Serializer {
   ) {}
 
   public function serialize(): string {
-    return json_encode($this->rawArray());
+    return $this->serializer->render($this->toArray());
   }
 
   <<__Memoize>>
-  public function rawArray(): array<mixed, mixed> {
-    return $this->serializer->render($this->hal);
+  public function toArray(): array<mixed, mixed> {
+    return $this->serializer->toArray($this->hal);
   }
 }

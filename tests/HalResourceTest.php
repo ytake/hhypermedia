@@ -1,10 +1,6 @@
 <?hh //strict
 
-use Ytake\HHhal\{
-  HalResource,
-  Link,
-  LinkResource
-};
+use Ytake\HHhal\{HalResource, Link, LinkResource};
 use PHPUnit\Framework\TestCase;
 
 class HalResourceTest extends TestCase {
@@ -12,7 +8,7 @@ class HalResourceTest extends TestCase {
   public function testShouldBeHalResourceObject(): void {
     $link = new Link(
       'self',
-      new ImmVector([new LinkResource('/tests')]),
+      new ImmVector([new LinkResource('/tests', shape('type' => 'application/vnd.collection+json'))]),
     );
     $resource = new HalResource(new Map([
       'id' => 123456789
