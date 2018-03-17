@@ -1,5 +1,20 @@
 <?hh // strict
 
+/**
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ *
+ * This software consists of voluntary contributions made by many individuals
+ * and is licensed under the MIT license.
+ *
+ * Copyright (c) 2018 Yuuki Takezawa
+ *
+ */
 namespace Ytake\HHhal;
 
 class HalResource {
@@ -18,6 +33,16 @@ class HalResource {
   }
 
   public function withLink(Link $link): this {
+    if($this->links->containsKey($link->getRel())) {
+      $rel = $this->links->get($link->getRel());
+      if(!is_null($rel)) {
+        $nv = $rel->getResource()->concat($link->getResource());
+        $this->links = new Map([
+          $link->getRel() =>  new Link($link->getRel(), $nv)
+        ]);
+        return $this;
+      }
+    }
     $this->links->add(Pair{$link->getRel(), $link});
     return $this;
   }
@@ -29,7 +54,8 @@ class HalResource {
     if ($this->embedded->containsKey($embbeddedName)) {
       $r = $this->embedded->get($embbeddedName);
       if(!is_null($r)) {
-        $r->add($resource);
+        $this->embedded->set($embbeddedName, $r->add($resource));
+        return $this;
       }
     }
     $this->embedded->add(

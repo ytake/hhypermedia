@@ -17,32 +17,21 @@
  */
 namespace Ytake\HHhal;
 
-type TLinkAttributes = shape(
-  ?'type' => string,
-  ?'deprecation' => string,
-  ?'name' => string,
-  ?'profile' => string,
-  ?'title' => string,
-  ?'hreflang' => string
-);
-
-class LinkResource {
+final class Curie extends Link {
 
   public function __construct(
-    protected string $href,
-    protected TLinkAttributes $attributes = shape(),
-    protected bool $templated = false
-  ) {}
-
-  public function getHref(): string {
-    return $this->href;
+    protected Vector<LinkResource> $link
+  ) {
+    parent::__construct('curies', $link);
   }
 
-  public function isTemplated(): bool {
-    return $this->templated;
+  <<__Override>>
+  public function getRel(): string {
+    return $this->rel;
   }
 
-  public function getAttributes(): TLinkAttributes {
-    return $this->attributes;
+  <<__Override>>
+  public function getResource(): Vector<LinkResource> {
+    return $this->link;
   }
 }
