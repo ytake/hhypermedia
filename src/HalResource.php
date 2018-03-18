@@ -24,10 +24,10 @@ class HalResource {
   protected Map<string, Vector<HalResource>> $embedded = Map{};
 
   public function __construct(
-    protected Map<string, mixed> $resources = Map{}
+    protected Map<mixed, mixed> $resources = Map{}
   ) {}
 
-  public function addResource(string $key, mixed $value): this {
+  public function addResource(mixed $key, mixed $value): this {
     $this->resources->add(Pair{$key, $value});
     return $this;
   }
@@ -72,7 +72,7 @@ class HalResource {
     return $this->embedded;
   }
 
-  public function getResource(): Map<string, mixed> {
+  public function getResource(): Map<mixed, mixed> {
     return $this->resources;
   }
 }
