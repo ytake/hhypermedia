@@ -3,6 +3,9 @@ Hypertext Application Language for HHVM/Hack
 
 [![Build Status](https://travis-ci.org/ytake/hhhal.svg?branch=master)](https://travis-ci.org/ytake/hhhal)
 
+[HAL - Hypertext Application Language](http://stateless.co/hal_specification.html)  
+[JSON Hypertext Application Language draft-kelly-json-hal-08](https://tools.ietf.org/html/draft-kelly-json-hal-08)
+
 ## Installation
 
 ```bash
@@ -12,6 +15,7 @@ $ hhvm -d xdebug.enable=0 -d hhvm.jit=0 -d hhvm.php7.all=1\
 
 ## Usage
 
+### Basic
 ```hack
 <?hh
 use Ytake\HHhal\Serializer\JsonSerializer;
@@ -25,11 +29,9 @@ $resource->withLink($link);
 
 $hal = new HalResource();
 $hal->withEmbedded('tests', $resource);
-new Serializer(new JsonSerializer(), $hal);
+$serializer = new Serializer(new JsonSerializer(), $hal);
+$serializer->serialize();
 ```
-
-### Serialize
-Supported Json
 
 ```json
 {
@@ -47,6 +49,50 @@ Supported Json
   }
 }
 ```
+
+### Curies
+
+```hack
+use Ytake\HHhal\Serializer\JsonSerializer;
+use Ytake\HHhal\{Curie, Link, CurieResource, LinkResource, Serializer, HalResource};
+
+$hal = new HalResource();
+$hal->withLink(
+  new Link('self', new Vector([new LinkResource('/tests')]))
+);
+$hal->withLink(
+  new Curie(
+    new Vector([
+      new CurieResource(
+        'http://haltalk.herokuapp.com/docs/{rel}', 
+        shape('name' => 'heroku')
+      )
+    ]),
+  )
+);
+$serializer = new Serializer(new JsonSerializer(), $hal);
+$serializer->serialize();
+```
+
+```json
+{
+  "_links":{
+    "self":{
+      "href":"\/tests"
+    },
+    "curies":[
+      {
+        "href":"http:\/\/haltalk.herokuapp.com\/docs\/{rel}",
+        "templated":true,
+        "name":"heroku"
+      }
+    ]
+  }
+}
+```
+
+### Serialize
+Supported Json
 
 ## Testing
 
