@@ -16,7 +16,7 @@ class SerializerTestTest extends TestCase {
     ]));
     $resource->withLink($link);
     $hal = new HalResource();
-    $hal->withEmbedded('tests', $resource);
+    $hal->withEmbedded('tests', Vector{$resource});
     $s = new Serializer(new JsonSerializer(), $hal);
     $this->assertSame([
       '_embedded' => [
@@ -58,11 +58,11 @@ class SerializerTestTest extends TestCase {
     $sampleResource = new HalResource(new Map([
       'id' => 5678,
     ]));
-    $sampleResource->withEmbedded('sample_embedded', new HalResource(new Map([
+    $sampleResource->withEmbedded('sample_embedded', Vector{new HalResource(new Map([
       'id' => 123456789
-    ])));
-    $hal->withEmbedded('tests', $resource);
-    $hal->withEmbedded('samples', $sampleResource);
+    ]))});
+    $hal->withEmbedded('tests', Vector{$resource});
+    $hal->withEmbedded('samples', Vector{$sampleResource});
     $s = new Serializer(new JsonSerializer(), $hal);
     $rawArray = $s->toArray();
     $this->assertArrayHasKey('_embedded', $rawArray);
@@ -126,11 +126,13 @@ class SerializerTestTest extends TestCase {
       'title' => 9876543210
     ]));
     $resource->withLink($link);
-    $root->withEmbedded('tests', $resource);
-    $root->withEmbedded('tests', new HalResource(new Map([
-      'id' => 1,
-      'title' => 'merge emmbedded resource'
-    ])));
+    $root->withEmbedded('tests', Vector{
+      $resource,
+      new HalResource(new Map([
+        'id' => 1,
+        'title' => 'merge emmbedded resource'
+      ]))
+    });
     $s = new Serializer(new JsonSerializer(), $root);
     $str = '{"_embedded":{"tests":[{"id":123456789,"title":9876543210,"_links":{"self":[{"href":"\/tests"},{"href":"\/tests2"}]}},{"id":1,"title":"merge emmbedded resource"}]}}';
     $this->assertSame($str, $s->serialize());
@@ -155,5 +157,33 @@ class SerializerTestTest extends TestCase {
     $s = new Serializer(new JsonSerializer(), $root);
     $str = '{"_links":{"self":{"href":"\/tests"},"curies":[{"href":"http:\/\/haltalk.herokuapp.com\/docs\/{rel}","templated":true,"name":"heroku"}]}}';
     $this->assertSame($str, $s->serialize());
+  }
+
+  public function testShouldReturnEmptyJson2(): void {
+    $hal = new HalResource();
+    $vec = Vector{ };
+    $resource = new HalResource(new Map([
+      'id' => 123456789,
+      'title' => 9876543210
+    ]));
+    $resource->withLink(new Link('self',
+      new Vector([
+        new LinkResource('/tests')
+      ]),
+    ));
+    $vec->add($resource);
+    $resource = new HalResource(new Map([
+      'id' => 123456789,
+      'title' => 9876543210
+    ]));
+    $resource->withLink(new Link('self',
+      new Vector([
+        new LinkResource('/tests')
+      ]),
+    ));
+    $vec->add($resource);
+    $hal->withEmbedded('samples', $vec);
+    $s = new Serializer(new JsonSerializer(), $hal);
+    $this->assertSame('{"_embedded":{"samples":[{"id":123456789,"title":9876543210,"_links":{"self":{"href":"\/tests"}}},{"id":123456789,"title":9876543210,"_links":{"self":{"href":"\/tests"}}}]}}', $s->serialize());
   }
 }

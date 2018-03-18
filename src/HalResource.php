@@ -27,7 +27,7 @@ class HalResource {
     protected Map<string, mixed> $resources = Map{}
   ) {}
 
-  public function withResource(string $key, mixed $value): this {
+  public function addResource(string $key, mixed $value): this {
     $this->resources->add(Pair{$key, $value});
     return $this;
   }
@@ -49,17 +49,17 @@ class HalResource {
 
   public function withEmbedded(
     string $embbeddedName,
-    HalResource $resource
+    Vector<HalResource> $resource
   ): this {
     if ($this->embedded->containsKey($embbeddedName)) {
       $r = $this->embedded->get($embbeddedName);
       if(!is_null($r)) {
-        $this->embedded->set($embbeddedName, $r->add($resource));
+        $this->embedded->set($embbeddedName, $r->concat($resource));
         return $this;
       }
     }
     $this->embedded->add(
-      Pair{$embbeddedName, Vector{$resource}}
+      Pair{$embbeddedName, $resource}
     );
     return $this;
   }

@@ -29,7 +29,7 @@ class HalResourceTest extends TestCase {
     ]));
     $resource->withLink($link);
     $hal = new HalResource();
-    $hal->withEmbedded('tests', $resource);
+    $hal->withEmbedded('tests', Vector{$resource});
     $this->assertInstanceOf(HalResource::class, $hal);
   }
 
@@ -54,7 +54,7 @@ class HalResourceTest extends TestCase {
       ]),
     ));
     $hal = new HalResource();
-    $hal->withEmbedded('tests', $resource);
+    $hal->withEmbedded('tests', Vector{$resource});
     $this->assertCount(0, $hal->getLinks()->toArray());
     $this->assertCount(0, $hal->getResource()->toArray());
     $v = $hal->getEmbedded()->get('tests');
@@ -75,11 +75,13 @@ class HalResourceTest extends TestCase {
       'title' => 9876543210
     ]));
     $resource->withLink($link);
-    $root->withEmbedded('tests', $resource);
-    $root->withEmbedded('tests', new HalResource(new Map([
-      'id' => 1,
-      'title' => 'merge emmbedded resource'
-    ])));
+    $root->withEmbedded('tests', Vector{
+      $resource,
+      new HalResource(new Map([
+        'id' => 1,
+        'title' => 'merge emmbedded resource'
+      ]))
+    });
     $this->assertCount(0, $root->getLinks()->toArray());
     $this->assertCount(0, $root->getResource()->toArray());
     $v = $root->getEmbedded()->get('tests');
