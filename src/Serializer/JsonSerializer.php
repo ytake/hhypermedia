@@ -56,7 +56,7 @@ class JsonSerializer implements ResourceSerializable {
   /**
    * for curies
    */
-  protected function resolveCuires(Curie $link): array<mixed, mixed> {
+  protected function resolveCuires(Curie $link): array<mixed> {
     $links = [];
     foreach($link->getResource() as $lr) {
       $links[] = array_merge([
