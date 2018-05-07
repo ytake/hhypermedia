@@ -35,7 +35,7 @@ class HalResource {
   public function withLink(Link $link): this {
     if($this->links->containsKey($link->getRel())) {
       $rel = $this->links->get($link->getRel());
-      if(!is_null($rel)) {
+      if(!\is_null($rel)) {
         $nv = $rel->getResource()->concat($link->getResource());
         $this->links = new Map([
           $link->getRel() =>  new Link($link->getRel(), $nv)
@@ -53,7 +53,7 @@ class HalResource {
   ): this {
     if ($this->embedded->containsKey($embbeddedName)) {
       $r = $this->embedded->get($embbeddedName);
-      if(!is_null($r)) {
+      if(!\is_null($r)) {
         $this->embedded->set($embbeddedName, $r->concat($resource));
         return $this;
       }
