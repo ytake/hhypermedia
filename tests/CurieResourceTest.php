@@ -1,18 +1,19 @@
 <?hh //strict
 
-use Ytake\HHhal\{CurieResource, Link, LinkResource};
-use PHPUnit\Framework\TestCase;
+use type Ytake\HHhal\{CurieResource, LinkResource};
+use type Facebook\HackTest\HackTest;
+use function Facebook\FBExpect\expect;
 
-class CurieResourceTest extends TestCase {
+class CurieResourceTest extends HackTest {
 
   public function testShouldBeHalResourceObject(): void {
     $resource = new CurieResource(
       'http://haltalk.herokuapp.com/docs/{rel}',
       shape('name' => 'heroku')
     );
-    $this->assertInstanceOf(LinkResource::class, $resource);
+    expect($resource)->toBeInstanceOf(LinkResource::class);
     $atrs = $resource->getAttributes();
-    $this->assertSame('heroku', Shapes::idx($atrs, 'name'));
-    $this->assertTrue($resource->isTemplated());
+    expect(Shapes::idx($atrs, 'name'))->toBeSame('heroku');
+    expect($resource->isTemplated())->toBeTrue();
   }
 }

@@ -1,9 +1,10 @@
 <?hh //strict
 
-use Ytake\HHhal\{HalResource, Link, LinkResource};
-use PHPUnit\Framework\TestCase;
+use type Ytake\HHhal\{HalResource, Link, LinkResource};
+use type Facebook\HackTest\HackTest;
+use function Facebook\FBExpect\expect;
 
-class HalResourceTest extends TestCase {
+final class HalResourceTest extends HackTest {
 
   public function testShouldBeHalResourceObject(): void {
     $link = new Link(
@@ -15,8 +16,8 @@ class HalResourceTest extends TestCase {
     ]));
     $resource->withLink($link);
     $ar = $resource->getLinks()->toArray();
-    $this->assertArrayHasKey('self', $ar);
-    $this->assertSame('self', $ar['self']->getRel());
+    expect($ar)->toContainKey('self');
+    expect($ar['self']->getRel())->toBeSame('self');
   }
 
   public function testShouldBeReturnEmbedded(): void {
@@ -30,7 +31,7 @@ class HalResourceTest extends TestCase {
     $resource->withLink($link);
     $hal = new HalResource();
     $hal->withEmbedded('tests', Vector{$resource});
-    $this->assertInstanceOf(HalResource::class, $hal);
+    expect($hal)->toBeInstanceOf(HalResource::class);
   }
 
   public function testShouldBeReturnMergeLink(): void {
@@ -55,12 +56,12 @@ class HalResourceTest extends TestCase {
     ));
     $hal = new HalResource();
     $hal->withEmbedded('tests', Vector{$resource});
-    $this->assertCount(0, $hal->getLinks()->toArray());
-    $this->assertCount(0, $hal->getResource()->toArray());
+    expect($hal->getLinks()->toArray())->toNotBeSame(0);
+    expect($hal->getResource()->toArray())->toNotBeSame(0);
     $v = $hal->getEmbedded()->get('tests');
-    $this->assertNotCount(0, $v);
-    /* UNSAFE_EXPR */ $linkResource = $v->get(0)->getLinks()->get('self');
-    /* UNSAFE_EXPR */ $this->assertCount(4 ,$linkResource->getResource()->toArray());
+    expect($v)->toNotBeSame(0);
+    $linkResource = $v?->get(0)?->getLinks()?->get('self');
+    expect($linkResource?->getResource()?->toArray())->toNotBeSame(4);
   }
 
   public function testShouldBeReturnMergeEmbedded(): void {
@@ -82,19 +83,19 @@ class HalResourceTest extends TestCase {
         'title' => 'merge emmbedded resource'
       ]))
     });
-    $this->assertCount(0, $root->getLinks()->toArray());
-    $this->assertCount(0, $root->getResource()->toArray());
+    expect(\count($root->getLinks()->toArray()))->toBeSame(0);
+    expect(\count($root->getResource()->toArray()))->toBeSame(0);
     $v = $root->getEmbedded()->get('tests');
-    $this->assertCount(2, $v?->toArray());
+    expect(\count($v?->toArray()))->toBeSame(2);
     /* UNSAFE_EXPR */ $r = $v[0]->getResource()->toArray();
-    /* UNSAFE_EXPR */ $this->assertArrayHasKey('id', $r);
-    /* UNSAFE_EXPR */ $this->assertArrayHasKey('title', $r);
-    /* UNSAFE_EXPR */ $this->assertSame(123456789, $r['id']);
-    /* UNSAFE_EXPR */ $this->assertSame(9876543210, $r['title']);
+    /* UNSAFE_EXPR */ expect($r)->toContainKey('id');
+    /* UNSAFE_EXPR */ expect($r)->toContainKey('title');
+    /* UNSAFE_EXPR */ expect($r['id'])->toBeSame(123456789);
+    /* UNSAFE_EXPR */ expect($r['title'])->toBeSame(9876543210);
     /* UNSAFE_EXPR */ $r = $v[1]->getResource()->toArray();
-    /* UNSAFE_EXPR */ $this->assertArrayHasKey('id', $r);
-    /* UNSAFE_EXPR */ $this->assertArrayHasKey('title', $r);
-    /* UNSAFE_EXPR */ $this->assertSame(1, $r['id']);
-    /* UNSAFE_EXPR */ $this->assertSame('merge emmbedded resource', $r['title']);
+    /* UNSAFE_EXPR */ expect($r)->toContainKey('id');
+    /* UNSAFE_EXPR */ expect($r)->toContainKey('title');
+    /* UNSAFE_EXPR */ expect($r['id'])->toBeSame(1);
+    /* UNSAFE_EXPR */ expect($r['title'])->toBeSame('merge emmbedded resource');
   }
 }

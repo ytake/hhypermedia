@@ -1,10 +1,11 @@
 <?hh // strict
 
-use Ytake\HHhal\Serializer\JsonSerializer;
-use Ytake\HHhal\{Curie, Link, LinkResource, CurieResource, Serializer, HalResource};
-use PHPUnit\Framework\TestCase;
+use type Ytake\HHhal\Serializer\JsonSerializer;
+use type Ytake\HHhal\{Curie, Link, LinkResource, CurieResource, Serializer, HalResource};
+use type Facebook\HackTest\HackTest;
+use function Facebook\FBExpect\expect;
 
-class SerializerTestTest extends TestCase {
+final class SerializerTest extends HackTest {
 
   public function testShouldBeSerializeString(): void {
     $link = new Link(
@@ -18,7 +19,7 @@ class SerializerTestTest extends TestCase {
     $hal = new HalResource();
     $hal->withEmbedded('tests', Vector{$resource});
     $s = new Serializer(new JsonSerializer(), $hal);
-    $this->assertSame([
+    expect($s->toArray())->toBeSame([
       '_embedded' => [
         'tests' => [
           [
@@ -31,7 +32,7 @@ class SerializerTestTest extends TestCase {
           ]
         ]
       ],
-    ], $s->toArray());
+    ]);
   }
 
   public function testShouldBeSerializeNestedArray(): void {
@@ -65,8 +66,8 @@ class SerializerTestTest extends TestCase {
     $hal->withEmbedded('samples', Vector{$sampleResource});
     $s = new Serializer(new JsonSerializer(), $hal);
     $rawArray = $s->toArray();
-    $this->assertArrayHasKey('_embedded', $rawArray);
-    $this->assertSame([
+    expect($rawArray)->toContainKey('_embedded');
+    expect($s->toArray())->toBeSame([
       'id' => 1234,
       'name' => 'ytake',
       '_links' => [
@@ -102,15 +103,15 @@ class SerializerTestTest extends TestCase {
           ]
         ]
       ],
-    ], $s->toArray());
+    ]);
     $str = '{"id":1234,"name":"ytake","_links":{"self":{"href":"\/tests\/root"}},"_embedded":{"tests":[{"id":123456789,"_links":{"self":{"href":"\/tests"},"self-two":{"href":"\/tests\/test","type":"application\/vnd.collection+json"}}}],"samples":[{"id":5678,"_embedded":{"sample_embedded":[{"id":123456789}]}}]}}';
-    $this->assertSame($str, $s->serialize());
+    expect($s->serialize())->toBeSame($str);
   }
 
   public function testShouldReturnEmptyJson(): void {
     $hal = new HalResource();
     $s = new Serializer(new JsonSerializer(), $hal);
-    $this->assertSame('{}', $s->serialize());
+    expect($s->serialize())->toBeSame('{}');
   }
 
   public function testShouldBeReturnSerialize(): void {
@@ -135,7 +136,7 @@ class SerializerTestTest extends TestCase {
     });
     $s = new Serializer(new JsonSerializer(), $root);
     $str = '{"_embedded":{"tests":[{"id":123456789,"title":9876543210,"_links":{"self":[{"href":"\/tests"},{"href":"\/tests2"}]}},{"id":1,"title":"merge emmbedded resource"}]}}';
-    $this->assertSame($str, $s->serialize());
+    expect($s->serialize())->toBeSame($str);
   }
 
   public function testShouldReturnSerializedResourceIncludeCurie(): void {
@@ -156,7 +157,7 @@ class SerializerTestTest extends TestCase {
     ));
     $s = new Serializer(new JsonSerializer(), $root);
     $str = '{"_links":{"self":{"href":"\/tests"},"curies":[{"href":"http:\/\/haltalk.herokuapp.com\/docs\/{rel}","templated":true,"name":"heroku"}]}}';
-    $this->assertSame($str, $s->serialize());
+    expect($s->serialize())->toBeSame($str);
   }
 
   public function testShouldReturnEmptyJson2(): void {
@@ -184,6 +185,8 @@ class SerializerTestTest extends TestCase {
     $vec->add($resource);
     $hal->withEmbedded('samples', $vec);
     $s = new Serializer(new JsonSerializer(), $hal);
-    $this->assertSame('{"_embedded":{"samples":[{"id":123456789,"title":9876543210,"_links":{"self":{"href":"\/tests"}}},{"id":123456789,"title":9876543210,"_links":{"self":{"href":"\/tests"}}}]}}', $s->serialize());
+    expect($s->serialize())->toBeSame(
+      '{"_embedded":{"samples":[{"id":123456789,"title":9876543210,"_links":{"self":{"href":"\/tests"}}},{"id":123456789,"title":9876543210,"_links":{"self":{"href":"\/tests"}}}]}}'
+    );
   }
 }

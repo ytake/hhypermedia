@@ -17,7 +17,7 @@
  */
 namespace Ytake\HHhal\Serializer;
 
-use Ytake\HHhal\HalResource;
+use type Ytake\HHhal\HalResource;
 
 enum Property: string as string {
   TEMPLATED = 'templated';

@@ -17,9 +17,13 @@
  */
 namespace Ytake\HHhal\Serializer;
 
-use Ytake\HHhal\Link;
-use Ytake\HHhal\Curie;
-use Ytake\HHhal\HalResource;
+use type Ytake\HHhal\Link;
+use type Ytake\HHhal\Curie;
+use type Ytake\HHhal\HalResource;
+
+use function array_merge;
+use function count;
+use function json_encode;
 
 class JsonSerializer implements ResourceSerializable {
 
@@ -32,7 +36,7 @@ class JsonSerializer implements ResourceSerializable {
       if ($lr->isTemplated()) {
         $links[Property::TEMPLATED] = true;
       }
-      $links = \array_merge($links, $lr->getAttributes());
+      $links = array_merge($links, $lr->getAttributes());
     }
     return $links;
   }
@@ -47,7 +51,7 @@ class JsonSerializer implements ResourceSerializable {
       if ($lr->isTemplated()) {
         $links[$i][Property::TEMPLATED] = true;
       }
-      $links = \array_merge($links, $lr->getAttributes());
+      $links = array_merge($links, $lr->getAttributes());
       $i++;
     }
     return $links;
@@ -59,7 +63,7 @@ class JsonSerializer implements ResourceSerializable {
   protected function resolveCuires(Curie $link): array<mixed> {
     $links = [];
     foreach($link->getResource() as $lr) {
-      $links[] = \array_merge([
+      $links[] = array_merge([
         Property::HREF => $lr->getHref(),
         Property::TEMPLATED => $lr->isTemplated(),
       ], $lr->getAttributes());
@@ -72,10 +76,9 @@ class JsonSerializer implements ResourceSerializable {
     array<mixed, mixed> $embedded = []
   ): array<mixed, mixed> {
     $links = [];
-    $next = [];
     if ($resource->getLinks()->count()) {
       foreach($resource->getLinks() as $namedLink => $linkResource) {
-        if($linkResource instanceof Curie) {
+        if($linkResource is Curie) {
           $links[$namedLink] = $this->resolveCuires($linkResource);
           continue;
         }
@@ -87,8 +90,8 @@ class JsonSerializer implements ResourceSerializable {
         }
       }
     }
-    $embedded = \array_merge($embedded, $resource->getResource()->toArray());
-    if (\count($links)) {
+    $embedded = array_merge($embedded, $resource->getResource()->toArray());
+    if (count($links)) {
       $embedded[Property::LINKS] = $links;
     }
     if ($resource->getEmbedded()->count()) {
@@ -106,11 +109,11 @@ class JsonSerializer implements ResourceSerializable {
   public function toArray(HalResource $resource): array<mixed, mixed> {
     return $this->serialize($resource);
   }
-
+  
   public function render(array<mixed, mixed> $resources = []): string {
-    if (\count($resources) === 0) {
+    if (count($resources) === 0) {
       $resources = new \stdClass();
     }
-    return \json_encode($resources);
+    return json_encode($resources);
   }
 }

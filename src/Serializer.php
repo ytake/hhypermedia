@@ -17,7 +17,7 @@
  */
 namespace Ytake\HHhal;
 
-use Ytake\HHhal\Serializer\ResourceSerializable;
+use type Ytake\HHhal\Serializer\ResourceSerializable;
 
 class Serializer {
 

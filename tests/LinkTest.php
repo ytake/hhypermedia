@@ -1,16 +1,17 @@
 <?hh // strict
 
-use Ytake\HHhal\{Link, LinkResource};
-use PHPUnit\Framework\TestCase;
+use type Ytake\HHhal\{Link, LinkResource};
+use type Facebook\HackTest\HackTest;
+use function Facebook\FBExpect\expect;
 
-class LinkTest extends TestCase {
+class LinkTest extends HackTest {
 
   public function testShouldBeLinkObjects(): void {
     $link = new Link(
       'self',
       new Vector([new LinkResource('/tests')]),
     );
-    $this->assertInstanceOf(Link::class, $link);
-    $this->assertSame($link->getRel(), 'self');
+    expect($link)->toBeInstanceOf(Link::class);
+    expect($link->getRel())->toBeSame('self');
   }
 }
