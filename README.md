@@ -98,6 +98,5 @@ Supported Json
 ## Testing
 
 ```bash
-$ hhvm -d xdebug.enable=0 -d hhvm.jit=0 -d hhvm.php7.all=1\
- -d hhvm.hack.lang.auto_typecheck=0 ./vendor/bin/phpunit
+$ hhvm ./vendor/bin/hacktest tests/
 ```
