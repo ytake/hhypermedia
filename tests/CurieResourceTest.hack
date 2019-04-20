@@ -1,10 +1,8 @@
-<?hh //strict
-
 use type Ytake\HHhal\{CurieResource, LinkResource};
 use type Facebook\HackTest\HackTest;
 use function Facebook\FBExpect\expect;
 
-class CurieResourceTest extends HackTest {
+final class CurieResourceTest extends HackTest {
 
   public function testShouldBeHalResourceObject(): void {
     $resource = new CurieResource(

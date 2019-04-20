@@ -1,5 +1,3 @@
-<?hh // strict
-
 /**
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
@@ -15,20 +13,24 @@
  * Copyright (c) 2018 Yuuki Takezawa
  *
  */
-namespace Ytake\HHhal;
+namespace Ytake\HHhal\Serializer;
 
-class Link {
+use type Ytake\HHhal\HalResource;
 
-  public function __construct(
-    protected string $rel,
-    protected Vector<LinkResource> $link
-  ) {}
+enum Property: string as string {
+  TEMPLATED = 'templated';
+  LINKS = '_links';
+  EMBEDDED = '_embedded';
+  HREF = 'href';
+}
 
-  public function getRel(): string {
-    return $this->rel;
-  }
+interface ResourceSerializable {
 
-  public function getResource(): Vector<LinkResource> {
-    return $this->link;
-  }
+  public function render(
+    dict<arraykey, mixed> $resources = dict[]
+  ): string;
+
+  public function toDict(
+    HalResource $resource
+  ): dict<arraykey, mixed>;
 }

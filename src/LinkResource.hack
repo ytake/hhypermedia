@@ -1,5 +1,3 @@
-<?hh // strict
-
 /**
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
@@ -17,21 +15,32 @@
  */
 namespace Ytake\HHhal;
 
-final class Curie extends Link {
+type TLinkAttributes = shape(
+  ?'type' => string,
+  ?'deprecation' => string,
+  ?'name' => string,
+  ?'profile' => string,
+  ?'title' => string,
+  ?'hreflang' => string
+);
+
+class LinkResource {
 
   public function __construct(
-    protected Vector<LinkResource> $link
-  ) {
-    parent::__construct('curies', $link);
+    protected string $href,
+    protected TLinkAttributes $attributes = shape(),
+    protected bool $templated = false
+  ) {}
+
+  public function getHref(): string {
+    return $this->href;
   }
 
-  <<__Override>>
-  public function getRel(): string {
-    return $this->rel;
+  public function isTemplated(): bool {
+    return $this->templated;
   }
 
-  <<__Override>>
-  public function getResource(): Vector<LinkResource> {
-    return $this->link;
+  public function getAttributes(): TLinkAttributes {
+    return $this->attributes;
   }
 }

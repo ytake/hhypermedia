@@ -1,5 +1,3 @@
-<?hh // strict
-
 /**
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
@@ -12,17 +10,26 @@
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the MIT license.
  *
- * Copyright (c) 2018 Yuuki Takezawa
+ * Copyright (c) 2018-2019 Yuuki Takezawa
  *
  */
 namespace Ytake\HHhal;
 
-final class CurieResource extends LinkResource {
+final class Curie extends Link {
 
   public function __construct(
-    protected string $href,
-    protected TLinkAttributes $attributes = shape('name' => '')
+    protected vec<LinkResource> $link
   ) {
-    parent::__construct($href, $attributes, true);
+    parent::__construct('curies', $link);
+  }
+
+  <<__Override>>
+  public function getRel(): string {
+    return $this->rel;
+  }
+
+  <<__Override>>
+  public function getResource(): vec<LinkResource> {
+    return $this->link;
   }
 }

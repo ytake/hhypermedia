@@ -1,5 +1,3 @@
-<?hh // strict
-
 /**
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
@@ -12,26 +10,23 @@
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the MIT license.
  *
- * Copyright (c) 2018 Yuuki Takezawa
+ * Copyright (c) 2018-2019 Yuuki Takezawa
  *
  */
 namespace Ytake\HHhal;
 
-use type Ytake\HHhal\Serializer\ResourceSerializable;
-
-class Serializer {
+class Link {
 
   public function __construct(
-    protected ResourceSerializable $serializer,
-    protected HalResource $hal
+    protected string $rel,
+    protected vec<LinkResource> $link
   ) {}
 
-  public function serialize(): string {
-    return $this->serializer->render($this->toArray());
+  public function getRel(): string {
+    return $this->rel;
   }
 
-  <<__Memoize>>
-  public function toArray(): array<mixed, mixed> {
-    return $this->serializer->toArray($this->hal);
+  public function getResource(): vec<LinkResource> {
+    return $this->link;
   }
 }

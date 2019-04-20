@@ -1,5 +1,3 @@
-<?hh // strict
-
 /**
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
@@ -17,32 +15,12 @@
  */
 namespace Ytake\HHhal;
 
-type TLinkAttributes = shape(
-  ?'type' => string,
-  ?'deprecation' => string,
-  ?'name' => string,
-  ?'profile' => string,
-  ?'title' => string,
-  ?'hreflang' => string
-);
-
-class LinkResource {
+final class CurieResource extends LinkResource {
 
   public function __construct(
     protected string $href,
-    protected TLinkAttributes $attributes = shape(),
-    protected bool $templated = false
-  ) {}
-
-  public function getHref(): string {
-    return $this->href;
-  }
-
-  public function isTemplated(): bool {
-    return $this->templated;
-  }
-
-  public function getAttributes(): TLinkAttributes {
-    return $this->attributes;
+    protected TLinkAttributes $attributes = shape('name' => '')
+  ) {
+    parent::__construct($href, $attributes, true);
   }
 }
