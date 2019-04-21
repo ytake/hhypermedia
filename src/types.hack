@@ -15,23 +15,16 @@
  */
 namespace Ytake\HHhal;
 
-class LinkResource {
+type LinkAttributes = shape(
+  ?'type' => string,
+  ?'deprecation' => string,
+  ?'name' => string,
+  ?'profile' => string,
+  ?'title' => string,
+  ?'hreflang' => string
+);
 
-  public function __construct(
-    protected string $href,
-    protected LinkAttributes $attributes = shape(),
-    protected bool $templated = false
-  ) {}
-
-  public function getHref(): string {
-    return $this->href;
-  }
-
-  public function isTemplated(): bool {
-    return $this->templated;
-  }
-
-  public function getAttributes(): LinkAttributes {
-    return $this->attributes;
-  }
-}
+type ErrorAttributes = shape(
+  ?'logref' => arraykey,
+  ?'path' => string,
+);

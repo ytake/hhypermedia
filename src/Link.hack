@@ -18,12 +18,12 @@ namespace Ytake\HHhal;
 class Link {
 
   public function __construct(
-    protected string $rel,
+    protected string $linkRelation,
     protected vec<LinkResource> $link
   ) {}
 
-  public function getRel(): string {
-    return $this->rel;
+  public function getLinkRelation(): string {
+    return $this->linkRelation;
   }
 
   public function getResource(): vec<LinkResource> {

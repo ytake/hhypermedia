@@ -17,35 +17,35 @@ namespace Ytake\HHhal;
 
 use namespace HH\Lib\{C, Vec};
 
-final class ResourceObject {
+final class ResourceObject<T as RootResource> {
 
   protected dict<string, Link> $links = dict[];
 
-  protected dict<string, vec<HalResource>> $embedded = dict[];
+  protected dict<string, vec<T>> $embedded = dict[];
 
   public function withLink(Link $link): this {
     $new = clone $this;
-    if (C\contains_key($new->links, $link->getRel())) {
+    if (C\contains_key($new->links, $link->getLinkRelation())) {
       $vec = C\first(
-        Vec\filter_with_key($new->links, ($k, $_) ==> $k === $link->getRel())
+        Vec\filter_with_key($new->links, ($k, $_) ==> $k === $link->getLinkRelation())
       );
       if($vec is nonnull) {
         $new->links = dict[
-          $link->getRel() =>  new Link(
-            $link->getRel(),
+          $link->getLinkRelation() =>  new Link(
+            $link->getLinkRelation(),
             Vec\concat($vec->getResource(), $link->getResource())
           )
         ];
         return $new;
       }
     }
-    $new->links[$link->getRel()] = $link;
+    $new->links[$link->getLinkRelation()] = $link;
     return $new;
   }
 
   public function withEmbedded(
     string $embbeddedName,
-    vec<HalResource> $resource
+    vec<T> $resource
   ): this {
     $new = clone $this;
     if (C\contains_key($new->embedded, $embbeddedName)) {
@@ -65,7 +65,7 @@ final class ResourceObject {
     return $this->links;
   }
 
-  public function getEmbedded(): dict<string, vec<HalResource>> {
+  public function getEmbedded(): dict<string, vec<T>> {
     return $this->embedded;
   }
 }

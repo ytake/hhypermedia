@@ -22,14 +22,4 @@ final class Curie extends Link {
   ) {
     parent::__construct('curies', $link);
   }
-
-  <<__Override>>
-  public function getRel(): string {
-    return $this->rel;
-  }
-
-  <<__Override>>
-  public function getResource(): vec<LinkResource> {
-    return $this->link;
-  }
 }

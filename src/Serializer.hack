@@ -15,21 +15,20 @@
  */
 namespace Ytake\HHhal;
 
-use type Ytake\HHhal\Serializer\ResourceSerializable;
+use type Ytake\HHhal\ResourceSerializer;
 
 class Serializer {
 
   public function __construct(
-    protected ResourceSerializable $serializer,
-    protected HalResource $hal
+    protected ResourceSerializer $serializer,
+    protected RootResource $resource
   ) {}
 
   public function serialize(): string {
-    return $this->serializer->render($this->toDict());
+    return $this->serializer->render($this->resource);
   }
 
-  <<__Memoize>>
-  public function toDict(): dict<arraykey, mixed> {
-    return $this->serializer->toDict($this->hal);
+  public function toDict():  dict<arraykey, mixed> {
+    return $this->serializer->toDict($this->resource);
   }
 }

@@ -10,28 +10,29 @@
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the MIT license.
  *
- * Copyright (c) 2018 Yuuki Takezawa
+ * Copyright (c) 2018-2019 Yuuki Takezawa
  *
  */
-namespace Ytake\HHhal;
+namespace Ytake\HHhal\Error;
 
-class LinkResource {
+use type Ytake\HHhal\Link;
+use type Ytake\HHhal\LinkResource;
+
+enum LinkRelation: string as string {
+  HELP = 'help';
+  DESCRIBES = 'describes';
+  ABOUT = 'about';
+}
+
+final class ErrorLink extends Link {
 
   public function __construct(
-    protected string $href,
-    protected LinkAttributes $attributes = shape(),
-    protected bool $templated = false
-  ) {}
-
-  public function getHref(): string {
-    return $this->href;
-  }
-
-  public function isTemplated(): bool {
-    return $this->templated;
-  }
-
-  public function getAttributes(): LinkAttributes {
-    return $this->attributes;
+    protected string $linkRelation,
+    protected vec<LinkResource> $link
+  ) {
+    parent::__construct(
+      LinkRelation::assert($linkRelation),
+      $link
+    );
   }
 }

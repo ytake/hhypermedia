@@ -15,13 +15,22 @@
  */
 namespace Ytake\HHhal\Serializer;
 
+enum Property: string as string {
+  TEMPLATED = 'templated';
+  LINKS = '_links';
+  EMBEDDED = '_embedded';
+  HREF = 'href';
+}
+
 use type Ytake\HHhal\Link;
 use type Ytake\HHhal\Curie;
+use type Ytake\HHhal\ResourceSerializer;
 use type Ytake\HHhal\HalResource;
+use type Ytake\HHhal\RootResource;
 use namespace HH\Lib\{C, Dict, Vec};
 use function json_encode;
 
-class JsonSerializer implements ResourceSerializable {
+class HalJsonSerializer implements ResourceSerializer {
 
   protected function resolveSingleLink(
     Link $link
@@ -122,15 +131,16 @@ class JsonSerializer implements ResourceSerializable {
     return $embedded;
   }
 
-  public function toDict(
-    HalResource $resource
-  ): dict<arraykey, mixed> {
-    return $this->serialize($resource);
+  public function render(
+    RootResource $resource
+  ): string {
+    return json_encode($this->toDict($resource));
   }
 
-  public function render(
-    dict<arraykey, mixed> $resources = dict[]
-  ): string {
-    return json_encode($resources);
+  public function toDict(
+    RootResource $resource
+  ):  dict<arraykey, mixed> {
+    $resource as HalResource;
+    return $this->serialize($resource);
   }
 }

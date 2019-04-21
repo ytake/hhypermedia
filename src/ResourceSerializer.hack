@@ -13,24 +13,17 @@
  * Copyright (c) 2018 Yuuki Takezawa
  *
  */
-namespace Ytake\HHhal\Serializer;
+namespace Ytake\HHhal;
 
-use type Ytake\HHhal\HalResource;
+use type Ytake\HHhal\RootResource;
 
-enum Property: string as string {
-  TEMPLATED = 'templated';
-  LINKS = '_links';
-  EMBEDDED = '_embedded';
-  HREF = 'href';
-}
-
-interface ResourceSerializable {
+interface ResourceSerializer {
 
   public function render(
-    dict<arraykey, mixed> $resources = dict[]
+    RootResource $resource
   ): string;
 
   public function toDict(
-    HalResource $resource
+    RootResource $resource
   ): dict<arraykey, mixed>;
 }

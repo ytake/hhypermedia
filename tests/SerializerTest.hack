@@ -1,4 +1,4 @@
-use type Ytake\HHhal\Serializer\JsonSerializer;
+use type Ytake\HHhal\Serializer\HalJsonSerializer;
 use type Ytake\HHhal\{Curie, Link, LinkResource, CurieResource, Serializer, HalResource, ResourceObject};
 use type Facebook\HackTest\HackTest;
 use function Facebook\FBExpect\expect;
@@ -15,7 +15,7 @@ final class SerializerTest extends HackTest {
     $secondNew = $secondRo->withEmbedded('tests', vec[$resource]);
     $hal = new HalResource($secondNew);
 
-    $s = new Serializer(new JsonSerializer(), $hal);
+    $s = new Serializer(new HalJsonSerializer(), $hal);
     expect($s->toDict())->toBeSame(dict[
       '_embedded' => dict[
         'tests' => vec[
@@ -58,7 +58,7 @@ final class SerializerTest extends HackTest {
     $halNew = $halNew->withEmbedded('samples', vec[$sampleResource]);
     $hal = new HalResource($halNew, dict['id' => 1234, 'name' => 'ytake']);
 
-    $s = new Serializer(new JsonSerializer(), $hal);
+    $s = new Serializer(new HalJsonSerializer(), $hal);
     expect($s->toDict())->toContainKey('_embedded');
     expect($s->toDict())->toBeSame(dict[
       'id' => 1234,
@@ -103,7 +103,7 @@ final class SerializerTest extends HackTest {
 
   public function testShouldReturnEmptyJson(): void {
     $hal = new HalResource(new ResourceObject());
-    $s = new Serializer(new JsonSerializer(), $hal);
+    $s = new Serializer(new HalJsonSerializer(), $hal);
     expect($s->serialize())->toBeSame('{}');
   }
 
@@ -124,7 +124,7 @@ final class SerializerTest extends HackTest {
         'title' => 'merge emmbedded resource'
       ])
     ]);
-    $s = new Serializer(new JsonSerializer(), new HalResource($rootNew));
+    $s = new Serializer(new HalJsonSerializer(), new HalResource($rootNew));
     $str = '{"_embedded":{"tests":[{"id":123456789,"title":9876543210,"_links":{"self":[{"href":"\/tests"},{"href":"\/tests2"}]}},{"id":1,"title":"merge emmbedded resource"}]}}';
     expect($s->serialize())->toBeSame($str);
   }
@@ -135,7 +135,7 @@ final class SerializerTest extends HackTest {
     |> $$->withLink(new Curie(vec[
         new CurieResource('http://haltalk.herokuapp.com/docs/{rel}', shape('name' => 'heroku'))
     ]));
-    $s = new Serializer(new JsonSerializer(), new HalResource($ro));
+    $s = new Serializer(new HalJsonSerializer(), new HalResource($ro));
     $str = '{"_links":{"self":{"href":"\/tests"},"curies":[{"href":"http:\/\/haltalk.herokuapp.com\/docs\/{rel}","templated":true,"name":"heroku"}]}}';
     expect($s->serialize())->toBeSame($str);
   }
@@ -159,7 +159,7 @@ final class SerializerTest extends HackTest {
     $hal = new ResourceObject()
     |> $$->withEmbedded('samples', $vec)
     |> new HalResource($$);
-    $s = new Serializer(new JsonSerializer(), $hal);
+    $s = new Serializer(new HalJsonSerializer(), $hal);
     expect($s->serialize())->toBeSame(
       '{"_embedded":{"samples":[{"id":123456789,"title":9876543210,"_links":{"self":{"href":"\/tests"}}},{"id":123456789,"title":9876543210,"_links":{"self":{"href":"\/tests"}}}]}}'
     );

@@ -10,28 +10,15 @@
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the MIT license.
  *
- * Copyright (c) 2018 Yuuki Takezawa
+ * Copyright (c) 2018-2019 Yuuki Takezawa
  *
  */
 namespace Ytake\HHhal;
 
-class LinkResource {
+<<__Sealed(HalResource::class, Error\MessageResource::class)>>
+interface RootResource {
 
-  public function __construct(
-    protected string $href,
-    protected LinkAttributes $attributes = shape(),
-    protected bool $templated = false
-  ) {}
+  public function getLinks(): dict<string, Link>;
 
-  public function getHref(): string {
-    return $this->href;
-  }
-
-  public function isTemplated(): bool {
-    return $this->templated;
-  }
-
-  public function getAttributes(): LinkAttributes {
-    return $this->attributes;
-  }
+  public function getEmbedded(): dict<string, vec<RootResource>>;
 }

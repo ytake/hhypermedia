@@ -10,28 +10,36 @@
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the MIT license.
  *
- * Copyright (c) 2018 Yuuki Takezawa
+ * Copyright (c) 2018-2019 Yuuki Takezawa
  *
  */
-namespace Ytake\HHhal;
+namespace Ytake\HHhal\Error;
 
-class LinkResource {
+use type Ytake\HHhal\Link;
+use type Ytake\HHhal\ResourceObject;
+use type Ytake\HHhal\ErrorAttributes;
+use type Ytake\HHhal\RootResource;
+
+/**
+ * @see https://github.com/blongden/vnd.error
+ */
+class MessageResource implements RootResource {
 
   public function __construct(
-    protected string $href,
-    protected LinkAttributes $attributes = shape(),
-    protected bool $templated = false
+    private string $errorMessge,
+    private ResourceObject<this> $resourceObject,
+    private ErrorAttributes $attributes = shape()
   ) {}
 
-  public function getHref(): string {
-    return $this->href;
+  public function getLinks(): dict<string, Link> {
+    return $this->resourceObject->getLinks();
   }
 
-  public function isTemplated(): bool {
-    return $this->templated;
+  public function getEmbedded(): dict<string, vec<this>> {
+    return $this->resourceObject->getEmbedded();
   }
 
-  public function getAttributes(): LinkAttributes {
+  public function getAttributes(): ErrorAttributes {
     return $this->attributes;
   }
 }

@@ -10,6 +10,6 @@ class LinkTest extends HackTest {
       vec[new LinkResource('/tests')],
     );
     expect($link)->toBeInstanceOf(Link::class);
-    expect($link->getRel())->toBeSame('self');
+    expect($link->getLinkRelation())->toBeSame('self');
   }
 }

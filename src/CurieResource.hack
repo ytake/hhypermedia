@@ -19,7 +19,7 @@ final class CurieResource extends LinkResource {
 
   public function __construct(
     protected string $href,
-    protected TLinkAttributes $attributes = shape('name' => '')
+    protected LinkAttributes $attributes = shape('name' => '')
   ) {
     parent::__construct($href, $attributes, true);
   }

@@ -15,10 +15,10 @@
  */
 namespace Ytake\HHhal;
 
-class HalResource {
+class HalResource implements RootResource {
 
   public function __construct(
-    private ResourceObject $resourceObject,
+    private ResourceObject<this> $resourceObject,
     protected dict<arraykey, mixed> $resources = dict[]
   ) {}
 
@@ -33,7 +33,7 @@ class HalResource {
     return $this->resourceObject->getLinks();
   }
 
-  public function getEmbedded(): dict<string, vec<HalResource>> {
+  public function getEmbedded(): dict<string, vec<this>> {
     return $this->resourceObject->getEmbedded();
   }
 

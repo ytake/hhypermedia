@@ -1,4 +1,4 @@
-# hhhal
+# Hhypertext
 Hypertext Application Language for HHVM/Hack
 
 [![Build Status](https://travis-ci.org/ytake/hhhal.svg?branch=master)](https://travis-ci.org/ytake/hhhal)

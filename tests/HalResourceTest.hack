@@ -16,7 +16,7 @@ final class HalResourceTest extends HackTest {
     ]);
     $ar = $resource->getLinks();
     expect($ar)->toContainKey('self');
-    expect($ar['self']->getRel())->toBeSame('self');
+    expect($ar['self']->getLinkRelation())->toBeSame('self');
   }
 
   public function testShouldBeReturnEmbedded(): void {
