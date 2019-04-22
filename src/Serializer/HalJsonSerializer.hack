@@ -13,7 +13,7 @@
  * Copyright (c) 2018-2019 Yuuki Takezawa
  *
  */
-namespace Ytake\HHhal\Serializer;
+namespace Ytake\Hhypermedia\Serializer;
 
 enum Property: string as string {
   TEMPLATED = 'templated';
@@ -22,11 +22,11 @@ enum Property: string as string {
   HREF = 'href';
 }
 
-use type Ytake\HHhal\Link;
-use type Ytake\HHhal\Curie;
-use type Ytake\HHhal\ResourceSerializer;
-use type Ytake\HHhal\HalResource;
-use type Ytake\HHhal\RootResource;
+use type Ytake\Hhypermedia\Link;
+use type Ytake\Hhypermedia\Curie;
+use type Ytake\Hhypermedia\ResourceSerializer;
+use type Ytake\Hhypermedia\HalResource;
+use type Ytake\Hhypermedia\RootResource;
 use namespace HH\Lib\{C, Dict, Vec};
 use function json_encode;
 

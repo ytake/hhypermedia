@@ -10,12 +10,12 @@
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the MIT license.
  *
- * Copyright (c) 2018 Yuuki Takezawa
+ * Copyright (c) 2018-2019 Yuuki Takezawa
  *
  */
-namespace Ytake\HHhal;
+namespace Ytake\Hhypermedia;
 
-use type Ytake\HHhal\ResourceSerializer;
+use type Ytake\Hhypermedia\ResourceSerializer;
 
 class Serializer {
 

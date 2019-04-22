@@ -1,5 +1,5 @@
 {
-  "name": "ytake/hhhal",
+  "name": "ytake/hhypermedia",
   "description": "for HATEOAS REST web services",
   "keywords": [
     "hal",
@@ -26,7 +26,7 @@
   },
   "autoload": {
     "psr-4": {
-      "Ytake\\HHhal\\": "src/"
+      "Ytake\\Hhypermedia\\": "src/"
     }
   },
   "minimum-stability": "stable"

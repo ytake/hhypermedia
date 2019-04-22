@@ -13,7 +13,7 @@
  * Copyright (c) 2018-2019 Yuuki Takezawa
  *
  */
-namespace Ytake\HHhal;
+namespace Ytake\Hhypermedia;
 
 class HalResource implements RootResource {
 

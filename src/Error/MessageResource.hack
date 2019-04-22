@@ -13,12 +13,12 @@
  * Copyright (c) 2018-2019 Yuuki Takezawa
  *
  */
-namespace Ytake\HHhal\Error;
+namespace Ytake\Hhypermedia\Error;
 
-use type Ytake\HHhal\Link;
-use type Ytake\HHhal\ResourceObject;
-use type Ytake\HHhal\ErrorAttributes;
-use type Ytake\HHhal\RootResource;
+use type Ytake\Hhypermedia\Link;
+use type Ytake\Hhypermedia\ResourceObject;
+use type Ytake\Hhypermedia\ErrorAttributes;
+use type Ytake\Hhypermedia\RootResource;
 
 /**
  * @see https://github.com/blongden/vnd.error

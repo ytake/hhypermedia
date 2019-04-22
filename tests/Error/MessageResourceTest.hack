@@ -1,7 +1,7 @@
-use type Ytake\HHhal\LinkResource;
-use type Ytake\HHhal\Error\ErrorLink;
-use type Ytake\HHhal\Error\MessageResource;
-use type Ytake\HHhal\ResourceObject;
+use type Ytake\Hhypermedia\LinkResource;
+use type Ytake\Hhypermedia\Error\ErrorLink;
+use type Ytake\Hhypermedia\Error\MessageResource;
+use type Ytake\Hhypermedia\ResourceObject;
 use type Facebook\HackTest\HackTest;
 use function Facebook\FBExpect\expect;
 

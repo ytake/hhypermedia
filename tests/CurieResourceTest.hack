@@ -1,4 +1,4 @@
-use type Ytake\HHhal\{CurieResource, LinkResource};
+use type Ytake\Hhypermedia\{CurieResource, LinkResource};
 use type Facebook\HackTest\HackTest;
 use function Facebook\FBExpect\expect;
 

@@ -13,10 +13,10 @@
  * Copyright (c) 2018-2019 Yuuki Takezawa
  *
  */
-namespace Ytake\HHhal\Error;
+namespace Ytake\Hhypermedia\Error;
 
-use type Ytake\HHhal\Link;
-use type Ytake\HHhal\LinkResource;
+use type Ytake\Hhypermedia\Link;
+use type Ytake\Hhypermedia\LinkResource;
 
 enum LinkRelation: string as string {
   HELP = 'help';

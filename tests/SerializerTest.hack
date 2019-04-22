@@ -1,5 +1,5 @@
-use type Ytake\HHhal\Serializer\HalJsonSerializer;
-use type Ytake\HHhal\{Curie, Link, LinkResource, CurieResource, Serializer, HalResource, ResourceObject};
+use type Ytake\Hhypermedia\Serializer\HalJsonSerializer;
+use type Ytake\Hhypermedia\{Curie, Link, LinkResource, CurieResource, Serializer, HalResource, ResourceObject};
 use type Facebook\HackTest\HackTest;
 use function Facebook\FBExpect\expect;
 

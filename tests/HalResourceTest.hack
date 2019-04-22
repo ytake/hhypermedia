@@ -1,4 +1,4 @@
-use type Ytake\HHhal\{HalResource, Link, LinkResource, ResourceObject};
+use type Ytake\Hhypermedia\{HalResource, Link, LinkResource, ResourceObject};
 use type Facebook\HackTest\HackTest;
 use function Facebook\FBExpect\expect;
 
@@ -93,15 +93,15 @@ final class HalResourceTest extends HackTest {
     expect(\count($root->getResource()))->toBeSame(0);
     $v = $root->getEmbedded()['tests'];
     expect(\count($v))->toBeSame(2);
-    /* UNSAFE_EXPR */ $r = $v[0]->getResource();
-    /* UNSAFE_EXPR */ expect($r)->toContainKey('id');
-    /* UNSAFE_EXPR */ expect($r)->toContainKey('title');
-    /* UNSAFE_EXPR */ expect($r['id'])->toBeSame(123456789);
-    /* UNSAFE_EXPR */ expect($r['title'])->toBeSame(9876543210);
-    /* UNSAFE_EXPR */ $r = $v[1]->getResource();
-    /* UNSAFE_EXPR */ expect($r)->toContainKey('id');
-    /* UNSAFE_EXPR */ expect($r)->toContainKey('title');
-    /* UNSAFE_EXPR */ expect($r['id'])->toBeSame(1);
-    /* UNSAFE_EXPR */ expect($r['title'])->toBeSame('merge emmbedded resource');
+    $r = $v[0]->getResource();
+    expect($r)->toContainKey('id');
+    expect($r)->toContainKey('title');
+    expect($r['id'])->toBeSame(123456789);
+    expect($r['title'])->toBeSame(9876543210);
+    $r = $v[1]->getResource();
+    expect($r)->toContainKey('id');
+    expect($r)->toContainKey('title');
+    expect($r['id'])->toBeSame(1);
+    expect($r['title'])->toBeSame('merge emmbedded resource');
   }
 }
