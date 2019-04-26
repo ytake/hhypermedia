@@ -31,6 +31,10 @@ class MessageResource implements RootResource {
     private ErrorAttributes $attributes = shape()
   ) {}
 
+  public function getErrorMesage(): string {
+    return $this->errorMessge;
+  }
+
   public function getLinks(): dict<string, Link> {
     return $this->resourceObject->getLinks();
   }

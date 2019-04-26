@@ -28,3 +28,11 @@ type ErrorAttributes = shape(
   ?'logref' => arraykey,
   ?'path' => string,
 );
+
+enum Property: string as string {
+  TEMPLATED = 'templated';
+  LINKS = '_links';
+  EMBEDDED = '_embedded';
+  HREF = 'href';
+  MESSAGE = 'message';
+}

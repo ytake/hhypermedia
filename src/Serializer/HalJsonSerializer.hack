@@ -15,15 +15,9 @@
  */
 namespace Ytake\Hhypermedia\Serializer;
 
-enum Property: string as string {
-  TEMPLATED = 'templated';
-  LINKS = '_links';
-  EMBEDDED = '_embedded';
-  HREF = 'href';
-}
-
 use type Ytake\Hhypermedia\Link;
 use type Ytake\Hhypermedia\Curie;
+use type Ytake\Hhypermedia\Property;
 use type Ytake\Hhypermedia\ResourceSerializer;
 use type Ytake\Hhypermedia\HalResource;
 use type Ytake\Hhypermedia\RootResource;
@@ -67,7 +61,7 @@ class HalJsonSerializer implements ResourceSerializer {
   /**
    * for curies
    */
-  protected function resolveCuires(Curie $link): vec<dict<arraykey, mixed>> {
+  private function resolveCuires(Curie $link): vec<dict<arraykey, mixed>> {
     $links = vec[];
     foreach($link->getResource() as $lr) {
       $links[] = Dict\merge(dict[
@@ -78,10 +72,9 @@ class HalJsonSerializer implements ResourceSerializer {
     return $links;
   }
 
-  protected function serialize(
-    HalResource $resource,
-    dict<arraykey, mixed> $embedded = dict[]
-  ): dict<arraykey, mixed> {
+  protected function resolveLinks(
+    RootResource $resource
+  ): dict<string, mixed> {
     $links = dict[];
     if (C\count($resource->getLinks())) {
       foreach($resource->getLinks() as $namedLink => $linkResource) {
@@ -97,10 +90,23 @@ class HalJsonSerializer implements ResourceSerializer {
         }
       }
     }
-    $embedded = Dict\merge($embedded, $resource->getResource());
+    return $links;
+  }
+
+  protected function mergeElement(
+    dict<string, mixed> $links,
+    dict<arraykey, mixed> $embedded
+  ): dict<arraykey, mixed> {
     if (C\count($links)) {
       $embedded = Dict\merge($embedded, dict[Property::LINKS => $links]);
     }
+    return $embedded;
+  }
+
+  protected function resolveEmbedded(
+    RootResource $resource,
+    dict<arraykey, mixed> $embedded
+  ): dict<arraykey, mixed> {
     $dict = vec[];
     if (C\count($resource->getEmbedded())) {
       $element = dict[];
@@ -108,27 +114,34 @@ class HalJsonSerializer implements ResourceSerializer {
         $element[$k] = dict[];
         $vec = vec[];
         if(C\count($row)) {
-          foreach($row as $halResource) {
-            $vec[] = $this->serialize($halResource);
+          foreach($row as $vecResource) {
+            $vec[] = $this->serialize($vecResource);
           }
           if(C\count($vec)) {
             $element = Dict\merge($element, dict[$k => $vec]);
             $embedded = Dict\merge(
               $embedded,
-              dict[
-                Property::EMBEDDED => Dict\merge(
-                  $element,
-                  dict[
-                    $k => $vec
-                  ]
-                )
-              ]
+              dict[Property::EMBEDDED => Dict\merge($element, dict[$k => $vec])]
             );
           }
         }
       }
     }
     return $embedded;
+  }
+
+  protected function serialize(
+    RootResource $resource,
+    dict<arraykey, mixed> $embedded = dict[]
+  ): dict<arraykey, mixed> {
+    $resource as HalResource;
+    return $this->resolveEmbedded(
+      $resource, 
+      $this->mergeElement(
+        $this->resolveLinks($resource),
+        Dict\merge($embedded, $resource->getResource())
+      )
+    );
   }
 
   public function render(
@@ -140,7 +153,6 @@ class HalJsonSerializer implements ResourceSerializer {
   public function toDict(
     RootResource $resource
   ):  dict<arraykey, mixed> {
-    $resource as HalResource;
     return $this->serialize($resource);
   }
 }

@@ -42,9 +42,6 @@ final class SerializerTest extends HackTest {
       vec[new LinkResource('/tests/test', shape('type' => 'application/vnd.collection+json'))],
     ));
     $resourceNew = new HalResource($new, dict['id' => 123456789]);
-
-
-
     $sampleRo = new ResourceObject();
     $sampleNew = $sampleRo->withEmbedded('sample_embedded', vec[
       new HalResource(new ResourceObject(), dict[
