@@ -1,7 +1,7 @@
-# Hhypertext
+# Hhypermedia
 Hypertext Application Language for HHVM/Hack
 
-[![Build Status](https://travis-ci.org/ytake/hhhal.svg?branch=master)](https://travis-ci.org/ytake/hhhal)
+[![Build Status](https://travis-ci.org/ytake/hhypermedia.svg?branch=master)](https://travis-ci.org/ytake/hhypermedia)
 
 [HAL - Hypertext Application Language](http://stateless.co/hal_specification.html)  
 [JSON Hypertext Application Language draft-kelly-json-hal-08](https://tools.ietf.org/html/draft-kelly-json-hal-08)
