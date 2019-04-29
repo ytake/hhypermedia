@@ -11,10 +11,9 @@ final class SerializerTest extends HackTest {
     $new = $ro->withLink($link);
     $resource = new HalResource($new, dict['id' => 123456789]);
 
-    $secondRo = new ResourceObject();
-    $secondNew = $secondRo->withEmbedded('tests', vec[$resource]);
-    $hal = new HalResource($secondNew);
-
+    $secondRo = new ResourceObject()
+    |> $$->withEmbedded('tests', vec[$resource]);
+    $hal = new HalResource($secondRo);
     $s = new Serializer(new HalJsonSerializer(), $hal);
     expect($s->toDict())->toBeSame(dict[
       '_embedded' => dict[
@@ -50,9 +49,9 @@ final class SerializerTest extends HackTest {
     $sampleResource = new HalResource($sampleNew, dict['id' => 5678,]);
 
     $halRo = new ResourceObject();
-    $halNew = $halRo->withLink(new Link('self', vec[new LinkResource('/tests/root')]));
-    $halNew = $halNew->withEmbedded('tests', vec[$resourceNew]);
-    $halNew = $halNew->withEmbedded('samples', vec[$sampleResource]);
+    $halNew = $halRo->withLink(new Link('self', vec[new LinkResource('/tests/root')]))
+    |> $$->withEmbedded('tests', vec[$resourceNew])
+    |> $$->withEmbedded('samples', vec[$sampleResource]);
     $hal = new HalResource($halNew, dict['id' => 1234, 'name' => 'ytake']);
 
     $s = new Serializer(new HalJsonSerializer(), $hal);

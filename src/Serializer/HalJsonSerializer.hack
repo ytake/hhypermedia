@@ -136,7 +136,7 @@ class HalJsonSerializer implements ResourceSerializer {
   ): dict<arraykey, mixed> {
     $resource as HalResource;
     return $this->resolveEmbedded(
-      $resource, 
+      $resource,
       $this->mergeElement(
         $this->resolveLinks($resource),
         Dict\merge($embedded, $resource->getResource())
