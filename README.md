@@ -2,10 +2,16 @@
 
 Hypertext Application Language for HHVM/Hack
 
-[![Build Status](https://travis-ci.org/ytake/hhypermedia.svg?branch=master)](https://travis-ci.org/ytake/hhypermedia)
+![Travis (.org) branch(https://travis-ci.org/ytake/hhypermedia.svg?branch=master)](https://img.shields.io/travis/ytake/hhypermedia/master.svg?style=flat-square)
+[![Packagist](https://img.shields.io/packagist/dt/ytake/hhypermedia.svg?style=flat-square)](https://packagist.org/packages/ytake/hhypermedia)
+[![Packagist Version](https://img.shields.io/packagist/v/ytake/hhypermedia.svg?color=orange&style=flat-square)](https://packagist.org/packages/ytake/hhypermedia)
+[![Packagist](https://img.shields.io/packagist/l/ytake/hhypermedia.svg?style=flat-square)](https://packagist.org/packages/ytake/hhypermedia)
+
+## Supported
 
 [HAL - Hypertext Application Language](http://stateless.co/hal_specification.html)  
-[JSON Hypertext Application Language draft-kelly-json-hal-08](https://tools.ietf.org/html/draft-kelly-json-hal-08)
+[JSON Hypertext Application Language draft-kelly-json-hal-08](https://tools.ietf.org/html/draft-kelly-json-hal-08)  
+[vnd.error](https://github.com/blongden/vnd.error)
 
 ## Requirements
 
@@ -41,7 +47,7 @@ $ro = new ResourceObject()
 |> $$->withLink($link);
 $resource = new HalResource($ro, dict['id' => 123456789]);
 
-$secondRo = new ResourceObject();
+$secondRo = new ResourceObject()
 |> $$->withEmbedded('tests', vec[$resource]);
 $hal = new HalResource($secondRo);
 $s = new Serializer(new HalJsonSerializer(), $hal);
@@ -112,12 +118,68 @@ echo $s->serialize();
 Supported the [vnd.error](https://github.com/blongden/vnd.error).
 
 ```hack
-    $linkVec = vec[new LinkResource('http://...', shape())];
-    $new = new ResourceObject()
-    |> $$->withLink( new ErrorLink('help', $linkVec))
-    |> $$->withLink( new ErrorLink('about', $linkVec))
-    |> $$->withLink( new ErrorLink('describes', $linkVec));
-    $attributes = shape('logref' => 42, 'path' => '/username');
-    $message = new MessageResource('Validation failed', $new, $attributes);
-    $s = new Serializer(new VndErrorSerializer(), $message);
+use type Ytake\Hhypermedia\Serializer;
+use type Ytake\Hhypermedia\LinkResource;
+use type Ytake\Hhypermedia\Error\ErrorLink;
+use type Ytake\Hhypermedia\Error\MessageResource;
+use type Ytake\Hhypermedia\ResourceObject;
+use type Ytake\Hhypermedia\Serializer\VndErrorSerializer;
+
+$linkVec = vec[new LinkResource('http://...')];
+$new = new ResourceObject()
+|> $$->withLink( new ErrorLink('help', $linkVec))
+|> $$->withLink( new ErrorLink('about', $linkVec))
+|> $$->withLink( new ErrorLink('describes', $linkVec));
+
+$s = new Serializer(
+  new VndErrorSerializer(),
+  new MessageResource(
+    'Validation failed',
+    $new,
+    shape('logref' => 42, 'path' => '/username')
+  )
+);
+\var_dump($s->toDict());
+```
+
+### vnd.error - toDict
+
+```hack
+dict[
+  'message' => 'Validation failed',
+  'logref' => 42,
+  'path' => '/username',
+  '_links' => dict[
+    'help' => dict[
+      'href' => 'http://...'
+    ],
+    'about' => dict[
+      'href' => 'http://...'
+    ],
+    'describes' => dict[
+      'href' => 'http://...'
+    ],
+  ]
+]
+```
+
+### vnd.error - Result
+
+```json
+{
+  "message": "Validation failed",
+  "path": "/username",
+  "logref": 42,
+  "_links": {
+    "about": {
+      "href": "http://..."
+    },
+    "describes": {
+      "href": "http://..."
+    },
+    "help": {
+      "href": "http://..."
+    }
+  }
+}
 ```
