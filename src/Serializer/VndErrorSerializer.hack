@@ -15,17 +15,14 @@
  */
 namespace Ytake\Hhypermedia\Serializer;
 
-use type Ytake\Hhypermedia\Link;
 use type Ytake\Hhypermedia\Property;
-use type Ytake\Hhypermedia\ResourceSerializer;
 use type Ytake\Hhypermedia\RootResource;
-use type Ytake\Hhypermedia\Error\ErrorLink;
 use type Ytake\Hhypermedia\Error\MessageResource;
-use namespace HH\Lib\{C, Dict, Vec};
-use function json_encode;
+use namespace HH\Lib\Dict;
 
 class VndErrorSerializer extends HalJsonSerializer {
 
+  <<__Override>>
   protected function serialize(
     RootResource $resource,
     dict<arraykey, mixed> $embedded = dict[]
