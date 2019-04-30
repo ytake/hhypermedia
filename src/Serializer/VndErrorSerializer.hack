@@ -35,7 +35,7 @@ class VndErrorSerializer extends HalJsonSerializer {
         Dict\merge(
           $embedded,
           dict[Property::MESSAGE => $resource->getErrorMesage()],
-          Shapes::toDict($resource->getAttributes())
+          $resource->getAttributes()
         )
       )
     );

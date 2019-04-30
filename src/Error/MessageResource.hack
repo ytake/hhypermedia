@@ -19,6 +19,7 @@ use type Ytake\Hhypermedia\Link;
 use type Ytake\Hhypermedia\ResourceObject;
 use type Ytake\Hhypermedia\ErrorAttributes;
 use type Ytake\Hhypermedia\RootResource;
+use namespace HH\Lib\{C, Dict, Vec};
 
 /**
  * @see https://github.com/blongden/vnd.error
@@ -28,7 +29,8 @@ class MessageResource implements RootResource {
   public function __construct(
     private string $errorMessge,
     private ResourceObject<this> $resourceObject,
-    private ErrorAttributes $attributes = shape()
+    private ErrorAttributes $errorAttributes = shape(),
+    private dict<arraykey, mixed> $optionalAttributes = dict[]
   ) {}
 
   public function getErrorMesage(): string {
@@ -43,7 +45,18 @@ class MessageResource implements RootResource {
     return $this->resourceObject->getEmbedded();
   }
 
-  public function getAttributes(): ErrorAttributes {
-    return $this->attributes;
+  public function getAttributes(): dict<arraykey, mixed> {
+    return Dict\merge(
+      Shapes::toDict($this->errorAttributes),
+      $this->optionalAttributes
+    );
   }
+
+  public function getErrorAttributes(): ErrorAttributes {
+    return $this->errorAttributes;
+  }
+
+  public function getOptionaAttributes(): dict<arraykey, mixed> {
+    return $this->optionalAttributes;
+  } 
 }

@@ -11,8 +11,13 @@ final class MessageResourceTest extends HackTest {
     $linkVec = vec[new LinkResource('http://...', shape())];
     $new = new ResourceObject()
     |> $$->withLink( new ErrorLink('help', $linkVec));
-    $attributes = shape('logref' => 42, 'path' => '/');
-    $message = new MessageResource('Validation failed', $new, $attributes);
+    $attributes = dict['logref' => 42, 'path' => '/'];
+    $message = new MessageResource(
+      'Validation failed', 
+      $new,
+      shape('logref' => 42, 'path' => '/'),
+      dict[]
+    );
     expect($message->getAttributes())->toBeSame($attributes);
     expect(\count($message->getEmbedded()))->toBeSame(0);
     $links = $message->getLinks();
