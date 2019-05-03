@@ -13,7 +13,7 @@ final class MessageResourceTest extends HackTest {
     |> $$->withLink( new ErrorLink('help', $linkVec));
     $attributes = dict['logref' => 42, 'path' => '/'];
     $message = new MessageResource(
-      'Validation failed', 
+      'Validation failed',
       $new,
       shape('logref' => 42, 'path' => '/'),
       dict[]

@@ -21,14 +21,17 @@ class Serializer {
 
   public function __construct(
     protected ResourceSerializer $serializer,
-    protected RootResource $resource
+    protected RootResource $resource,
+    protected SerializationVisitorInterface $visitor
   ) {}
 
   public function serialize(): string {
-    return $this->serializer->render($this->resource);
+    return $this->visitor->getResult(
+      $this->toDict()
+    );
   }
 
-  public function toDict():  dict<arraykey, mixed> {
+  public function toDict(): dict<arraykey, mixed> {
     return $this->serializer->toDict($this->resource);
   }
 }

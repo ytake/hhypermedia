@@ -19,10 +19,6 @@ use type Ytake\Hhypermedia\RootResource;
 
 interface ResourceSerializer {
 
-  public function render(
-    RootResource $resource
-  ): string;
-
   public function toDict(
     RootResource $resource
   ): dict<arraykey, mixed>;

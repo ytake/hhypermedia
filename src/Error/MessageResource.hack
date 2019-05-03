@@ -19,7 +19,7 @@ use type Ytake\Hhypermedia\Link;
 use type Ytake\Hhypermedia\ResourceObject;
 use type Ytake\Hhypermedia\ErrorAttributes;
 use type Ytake\Hhypermedia\RootResource;
-use namespace HH\Lib\{C, Dict, Vec};
+use namespace HH\Lib\Dict;
 
 /**
  * @see https://github.com/blongden/vnd.error
@@ -58,5 +58,5 @@ class MessageResource implements RootResource {
 
   public function getOptionaAttributes(): dict<arraykey, mixed> {
     return $this->optionalAttributes;
-  } 
+  }
 }

@@ -4,6 +4,7 @@ use type Ytake\Hhypermedia\Error\ErrorLink;
 use type Ytake\Hhypermedia\Error\MessageResource;
 use type Ytake\Hhypermedia\ResourceObject;
 use type Ytake\Hhypermedia\Serializer\VndErrorSerializer;
+use type Ytake\Hhypermedia\Visitor\JsonSerializationVisitor;
 use type Facebook\HackTest\HackTest;
 use function Facebook\FBExpect\expect;
 
@@ -17,7 +18,11 @@ final class VndErrorSerializerTest extends HackTest {
     |> $$->withLink( new ErrorLink('describes', $linkVec));
     $attributes = shape('logref' => 42, 'path' => '/username');
     $message = new MessageResource('Validation failed', $new, $attributes);
-    $s = new Serializer(new VndErrorSerializer(), $message);
+    $s = new Serializer(
+      new VndErrorSerializer(),
+      $message,
+      new JsonSerializationVisitor()
+    );
     expect($s->toDict())->toBeSame(dict[
       'message' => 'Validation failed',
       'logref' => 42,
@@ -44,7 +49,11 @@ final class VndErrorSerializerTest extends HackTest {
     |> $$->withLink( new ErrorLink('describes', $linkVec));
     $attributes = shape('logref' => 42, 'path' => '/username');
     $message = new MessageResource('Validation failed', $new, $attributes);
-    $s = new Serializer(new VndErrorSerializer(), $message);
+    $s = new Serializer(
+      new VndErrorSerializer(),
+      $message,
+      new JsonSerializationVisitor()
+    );
     $str = '{"message":"Validation failed","logref":42,"path":"\/username","_links":{"help":{"href":"http:\/\/..."},"about":{"href":"http:\/\/..."},"describes":{"href":"http:\/\/..."}}}';
     expect($s->serialize())->toBeSame($str);
   }
@@ -67,7 +76,11 @@ final class VndErrorSerializerTest extends HackTest {
     |> $$->withEmbedded('errors', vec[$message]);
     $attributes = shape('logref' => 42);
     $message = new MessageResource('Validation failed', $new, $attributes);
-    $s = new Serializer(new VndErrorSerializer(), $message);
+    $s = new Serializer(
+      new VndErrorSerializer(),
+      $message,
+      new JsonSerializationVisitor()
+    );
     expect($s->toDict())->toBeSame(dict[
       'message' => 'Validation failed',
       'logref' => 42,

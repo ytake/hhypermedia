@@ -13,29 +13,11 @@
  * Copyright (c) 2018-2019 Yuuki Takezawa
  *
  */
-namespace Ytake\Hhypermedia\Serializer;
+namespace Ytake\Hhypermedia;
 
-use type Ytake\Hhypermedia\Property;
-use type Ytake\Hhypermedia\RootResource;
-use type Ytake\Hhypermedia\Error\MessageResource;
-use namespace HH\Lib\Dict;
+interface SerializationVisitorInterface {
 
-class VndErrorSerializer extends HalJsonSerializer {
-
-  <<__Override>>
-  public function toDict(
-    RootResource $resource
-  ): dict<arraykey, mixed> {
-    $resource as MessageResource;
-    return $this->resolveEmbedded(
-      $resource,
-      $this->mergeElement(
-        $this->resolveLinks($resource),
-        Dict\merge(
-          dict[Property::MESSAGE => $resource->getErrorMesage()],
-          $resource->getAttributes()
-        )
-      )
-    );
-  }
+  public function getResult(
+    dict<arraykey, mixed> $data
+  ): string;
 }

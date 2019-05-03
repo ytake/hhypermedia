@@ -22,7 +22,6 @@ use type Ytake\Hhypermedia\ResourceSerializer;
 use type Ytake\Hhypermedia\HalResource;
 use type Ytake\Hhypermedia\RootResource;
 use namespace HH\Lib\{C, Dict, Vec};
-use function json_encode;
 
 class HalJsonSerializer implements ResourceSerializer {
 
@@ -115,7 +114,7 @@ class HalJsonSerializer implements ResourceSerializer {
         $vec = vec[];
         if(C\count($row)) {
           foreach($row as $vecResource) {
-            $vec[] = $this->serialize($vecResource);
+            $vec[] = $this->toDict($vecResource);
           }
           if(C\count($vec)) {
             $element = Dict\merge($element, dict[$k => $vec]);
@@ -130,29 +129,16 @@ class HalJsonSerializer implements ResourceSerializer {
     return $embedded;
   }
 
-  protected function serialize(
-    RootResource $resource,
-    dict<arraykey, mixed> $embedded = dict[]
+  public function toDict(
+    RootResource $resource
   ): dict<arraykey, mixed> {
     $resource as HalResource;
     return $this->resolveEmbedded(
       $resource,
       $this->mergeElement(
         $this->resolveLinks($resource),
-        Dict\merge($embedded, $resource->getResource())
+        $resource->getResource()
       )
     );
-  }
-
-  public function render(
-    RootResource $resource
-  ): string {
-    return json_encode($this->toDict($resource));
-  }
-
-  public function toDict(
-    RootResource $resource
-  ):  dict<arraykey, mixed> {
-    return $this->serialize($resource);
   }
 }

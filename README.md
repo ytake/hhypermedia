@@ -35,12 +35,13 @@ the hal+json transformer will represent the given data following the [`JSON Hype
 ### Basic
 
 ```hack
-use Ytake\Hhypermedia\Serializer\HalJsonSerializer;
-use Ytake\Hhypermedia\Link;
-use Ytake\Hhypermedia\LinkResource;
-use Ytake\Hhypermedia\Serializer;
-use Ytake\Hhypermedia\HalResource;
-use Ytake\Hhypermedia\ResourceObject;
+use type Ytake\Hhypermedia\Serializer\HalJsonSerializer;
+use type Ytake\Hhypermedia\Link;
+use type Ytake\Hhypermedia\LinkResource;
+use type Ytake\Hhypermedia\Serializer;
+use type Ytake\Hhypermedia\HalResource;
+use type Ytake\Hhypermedia\ResourceObject;
+use type Ytake\Hhypermedia\Visitor\JsonSerializationVisitor;
 
 $link = new Link('self', vec[new LinkResource('/users')]);
 $ro = new ResourceObject()
@@ -50,7 +51,11 @@ $resource = new HalResource($ro, dict['id' => 123456789]);
 $secondRo = new ResourceObject()
 |> $$->withEmbedded('tests', vec[$resource]);
 $hal = new HalResource($secondRo);
-$s = new Serializer(new HalJsonSerializer(), $hal);
+$s = new Serializer(
+  new HalJsonSerializer(),
+  $hal,
+  new JsonSerializationVisitor()
+);
 echo $s->serialize();
 ```
 
@@ -76,21 +81,26 @@ echo $s->serialize();
 ### Curies
 
 ```hack
-use Ytake\Hhypermedia\Link;
-use Ytake\Hhypermedia\Curie;
-use Ytake\Hhypermedia\CurieResource;
-use Ytake\Hhypermedia\LinkResource;
-use Ytake\Hhypermedia\Serializer;
-use Ytake\Hhypermedia\HalResource;
-use Ytake\Hhypermedia\ResourceObject;
-use Ytake\Hhypermedia\Serializer\HalJsonSerializer;
+use type Ytake\Hhypermedia\Link;
+use type Ytake\Hhypermedia\Curie;
+use type Ytake\Hhypermedia\CurieResource;
+use type Ytake\Hhypermedia\LinkResource;
+use type Ytake\Hhypermedia\Serializer;
+use type Ytake\Hhypermedia\HalResource;
+use type Ytake\Hhypermedia\ResourceObject;
+use type Ytake\Hhypermedia\Serializer\HalJsonSerializer;
+use type Ytake\Hhypermedia\Visitor\JsonSerializationVisitor;
 
 $ro = new ResourceObject()
 |> $$->withLink(new Link('self', vec[new LinkResource('/tests')]))
 |> $$->withLink(new Curie(vec[
   new CurieResource('http://haltalk.herokuapp.com/docs/{rel}', shape('name' => 'heroku'))
 ]));
-$s = new Serializer(new HalJsonSerializer(), new HalResource($ro));
+$s = new Serializer(
+  new HalJsonSerializer(),
+  new HalResource($ro),
+  new JsonSerializationVisitor()
+);
 echo $s->serialize();
 ```
 
@@ -124,6 +134,7 @@ use type Ytake\Hhypermedia\Error\ErrorLink;
 use type Ytake\Hhypermedia\Error\MessageResource;
 use type Ytake\Hhypermedia\ResourceObject;
 use type Ytake\Hhypermedia\Serializer\VndErrorSerializer;
+use type Ytake\Hhypermedia\Visitor\JsonSerializationVisitor;
 
 $linkVec = vec[new LinkResource('http://...')];
 $new = new ResourceObject()
@@ -137,7 +148,8 @@ $s = new Serializer(
     'Validation failed',
     $new,
     shape('logref' => 42, 'path' => '/username')
-  )
+  ),
+  new JsonSerializationVisitor()
 );
 \var_dump($s->toDict());
 ```
